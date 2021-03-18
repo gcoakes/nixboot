@@ -22,13 +22,13 @@
               services.getty.autologinUser = mkForce "root";
               systemd.services.sshd.wantedBy = mkOverride 0 [ "multi-user.target" ];
             };
-            packages = {
-              inherit (nixosConfigurations.netboot.config.system.build)
-                netbootRamdisk
-                kernel
-                netbootIpxeScript
-                ;
-            };
+            packages = let
+              build = nixosConfigurations.netboot.config.system.build;
+            in
+              {
+                inherit (build) kernel;
+                initrd = build.netbootRamdisk;
+              };
           }
       );
 }
